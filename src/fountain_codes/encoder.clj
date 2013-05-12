@@ -1,4 +1,5 @@
-(ns fountain-codes.encoder)
+(ns fountain-codes.encoder
+  (:use [fountain-codes.sample :as sample]))
 
 
 (defn- choose-degree
@@ -6,15 +7,23 @@
   [k]
   (rand-int k))
 
+(defn- combine-pkts
+  "Combines packets to create an encoded packet"
+  [pkts]
+  )
+
 ;; filename -> packet size -> `(data k)
 (defn- specify-fntn
   "Generates params required to specify fountain. That is, gets data at
   filename, breaks it into a list of size-l packets, and returns
   `(data k), where k is the number of l-byte packets in the data."
   [fname l]
-  (let [txt  (slurp fname)
-        data (into-array (partition-all l txt))
-        k    (/ (.length txt) l)]
+  (let [txt      (slurp fname)
+        txtlen   (.length txt)
+        trailing (apply str (repeat (- l (mod txtlen l)) " "))
+        txt'     (str txt trailing)
+        data     (into [] (partition-all l txt'))
+        k        (/ (.length txt') l)]
     `(~data ~k)))
 
 ;; filename -> packet size -> packets
@@ -24,4 +33,5 @@
   (let [specs (specify-fntn fname l)
         data  (first specs)
         k     (second specs)]
-    (println (aget data 1))))
+    ;(combine-pkts (uniform-k-sample data (choose-degree k)))))
+    (println k)))
