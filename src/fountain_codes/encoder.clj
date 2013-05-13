@@ -7,10 +7,11 @@
   [k]
   (rand-int k))
 
-(defn- combine-pkts
-  "Combines packets to create an encoded packet"
-  [pkts]
-  )
+; hack hack hack -- don't grok macros well enough to make this a macro!
+(defn- combine-pkts [pkts]
+  "Combines packets to create an encoded packet. Currently this means XOR'ing
+  all the packets together."
+  (apply map (fn [& x] (reduce bit-xor x)) pkts))
 
 ;; filename -> packet size -> `(data k)
 (defn- specify-fntn
@@ -22,7 +23,7 @@
         txtlen   (.length txt)
         trailing (apply str (repeat (- l (mod txtlen l)) " "))
         txt'     (str txt trailing)
-        data     (into [] (partition-all l txt'))
+        data     (into [] (partition-all l (map #(int %) txt')))
         k        (/ (.length txt') l)]
     `(~data ~k)))
 
@@ -32,6 +33,6 @@
   [fname l]
   (let [specs (specify-fntn fname l)
         data  (first specs)
-        k     (second specs)]
-    ;(combine-pkts (uniform-k-sample data (choose-degree k)))))
-    (println k)))
+        k     (second specs)
+        pkts  (uniform-k-sample data (choose-degree k))]
+    (println (combine-pkts pkts))))
