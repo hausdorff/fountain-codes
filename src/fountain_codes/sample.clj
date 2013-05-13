@@ -1,10 +1,11 @@
-(ns fountain-codes.sample)
+(ns fountain-codes.sample
+  "Simple package for sampling data")
 
 
 (defn- rs-create
-  "Data structure allowing selection of a uniformly-likely k-sample of an
-  n-element list in O(n) time and space. Specified in Algorithm R of Vitter
-  1985.
+  "The reservoir sampler is a data structure allowing selection of a
+  uniformly-likely k-sample of an n-element list in O(n) time and space.
+  Specified in Algorithm R of Vitter 1985.
 
   `size` metadatum reflects total capacity of sampler; `n` reflects the current
   number of times `insert` has been called.

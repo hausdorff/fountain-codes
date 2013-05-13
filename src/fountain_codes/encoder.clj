@@ -1,4 +1,5 @@
 (ns fountain-codes.encoder
+  "Implements the encoding step for vanilla LT fountain codes"
   (:use [fountain-codes.sample :as sample]))
 
 
