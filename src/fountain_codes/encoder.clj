@@ -8,7 +8,7 @@
   "Chooses degree of packet from distribution \rho. Currently this is random
   from [1..k] inclusive."
   [k]
-  (enc-rand-int k))
+  (lazy-rand/enc-deg k))
 
 ; hack hack hack -- don't grok macros well enough to make this a macro!
 (defn- combine-pkts [pkts]

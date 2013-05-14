@@ -1,5 +1,6 @@
 (ns fountain-codes.sample
-  "Simple package for sampling data")
+  "Simple package for sampling data"
+  (:use [fountain-codes.lazy-rand :as lazy-rand]))
 
 
 (defn- rs-create
@@ -21,9 +22,9 @@
   [sampler v]
   (let [{:keys [size n]} (meta sampler)
         n' (inc n)
-        index (rand-int n')]
-    (with-meta (cond (< n' size)    (conj sampler v)
-                     (= n' size)    (shuffle (conj sampler v))
+        index (lazy-rand/enc-pkts n')]
+    (with-meta (cond (<= n' size)    (conj sampler v)
+                     ;(= n' size)    (shuffle (conj sampler v))
                      (< index size) (assoc sampler index v)
                      :else          sampler)
       {:size size
