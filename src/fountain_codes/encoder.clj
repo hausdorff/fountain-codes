@@ -41,8 +41,10 @@
     (combine-pkts pkts)))
 
 ;; TODO:
-;; Our goal is dhange `encode` to be a lazy sequence. This involves:
-;; (1) remove (def r (Random. 13)) in lazy-rand.clj
-;; (2) remove `det-rand-int` in lazy-rand.clj
+;; Our goal is change `encode` to be completely lazy sequence. This involves:
+;;
+;; (1) remove random number generators lazy-rand.clj
+;; (2) remove nextInt wrappers in lazy-rand.clj
 ;; (3) change choose-degree to be a lazy sequence of random ints [1..k]
-;; (4) finally, change `encode` to be a lazy sequence
+;; (4) change insert in sample to be a lazy sequence of random ints
+;; (5) finally, change `encode` to be a lazy sequence
