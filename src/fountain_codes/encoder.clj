@@ -1,12 +1,14 @@
 (ns fountain-codes.encoder
   "Implements the encoding step for vanilla LT fountain codes"
-  (:use [fountain-codes.sample :as sample]))
+  (:use [fountain-codes.sample :as sample]
+        [fountain-codes.lazy-rand :as lazy-rand]))
 
 
 (defn- choose-degree
-  "Chooses degree of packet from distribution \rho"
+  "Chooses degree of packet from distribution \rho. Currently this is random
+  from [1..k] inclusive."
   [k]
-  (rand-int k))
+  (enc-rand-int k))
 
 ; hack hack hack -- don't grok macros well enough to make this a macro!
 (defn- combine-pkts [pkts]
@@ -36,4 +38,11 @@
         data  (first specs)
         k     (second specs)
         pkts  (uniform-k-sample data (choose-degree k))]
-    (println (combine-pkts pkts))))
+    (combine-pkts pkts)))
+
+;; TODO:
+;; Our goal is dhange `encode` to be a lazy sequence. This involves:
+;; (1) remove (def r (Random. 13)) in lazy-rand.clj
+;; (2) remove `det-rand-int` in lazy-rand.clj
+;; (3) change choose-degree to be a lazy sequence of random ints [1..k]
+;; (4) finally, change `encode` to be a lazy sequence
