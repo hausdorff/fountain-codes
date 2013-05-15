@@ -4,12 +4,6 @@
         [fountain-codes.lazy-rand :as lazy-rand]))
 
 
-(defn- choose-degree
-  "Chooses degree of packet from distribution \rho. Currently this is random
-  from [1..k] inclusive."
-  [k]
-  (lazy-rand/enc-deg k))
-
 ; hack hack hack -- don't grok macros well enough to make this a macro!
 (defn- combine-pkts [pkts]
   "Combines packets to create an encoded packet. Currently this means XOR'ing
@@ -30,15 +24,24 @@
         k        (/ (.length txt') l)]
     `(~data ~k)))
 
+(defn- pkts-subset
+  [data indices]
+  (map (fn [x] (.get data x)) indices))
+
 ;; filename -> packet size -> packets
 (defn encode
   "Generates enough packets to reconstruct the original file"
   [fname l]
-  (let [specs (specify-fntn fname l)
-        data  (first specs)
-        k     (second specs)
-        pkts  (uniform-k-sample data (choose-degree k))]
-    (combine-pkts pkts)))
+  (let [specs     (specify-fntn fname l)
+        data      (first specs)
+        k         (second specs)
+        deg-seed  (rand-int Integer/MAX_VALUE)
+        pkts-seed (rand-int Integer/MAX_VALUE)
+        deg       (lazy-rand/rint deg-seed k)
+        indices   (uniform-k-sample (range 0 k) deg pkts-seed)
+        pkts      (pkts-subset data indices)]
+    (with-meta (combine-pkts pkts) {:k k :deg-seed deg-seed
+                                    :pkts-seed pkts-seed})))
 
 ;; TODO:
 ;; Our goal is change `encode` to be completely lazy sequence. This involves:
