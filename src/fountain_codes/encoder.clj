@@ -53,4 +53,4 @@
     (println (str "    Data size: " (* k l) " bytes"))
     (println (str "    # of pkts: " k))
     (with-meta (repeatedly #(encode-pkt data k))
-      {:k k})))
+      {:k k :l l})))
