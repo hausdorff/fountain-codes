@@ -5,4 +5,4 @@
 (defn -main [& args]
   (let [l        15
         pkt-strm (encoder/encode "data/paragraph" l)]
-    (decoder/decode pkt-strm l)))
+    (decoder/decode pkt-strm)))
