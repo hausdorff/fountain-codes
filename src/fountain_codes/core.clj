@@ -1,5 +1,8 @@
 (ns fountain-codes.core
-  (:use [fountain-codes.encoder :as encoder]))
+  (:use [fountain-codes.encoder :as encoder]
+        [fountain-codes.decoder :as decoder]))
 
 (defn -main [& args]
-  (encoder/encode "data/rfc1951" 15))
+  (let [l        15
+        pkt-strm (encoder/encode "data/paragraph" l)]
+    (decoder/decode pkt-strm l)))
