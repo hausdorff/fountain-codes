@@ -25,20 +25,29 @@
     `(~data ~k)))
 
 (defn- pkts-subset
+  "Takes a list of indices, returns a list of packets at those indices"
   [data indices]
   (map (fn [x] (.get data x)) indices))
 
-;; filename -> packet size -> packets
-(defn encode
-  "Generates enough packets to reconstruct the original file"
-  [fname l]
-  (let [specs     (specify-fntn fname l)
-        data      (first specs)
-        k         (second specs)
-        deg-seed  (rand-int Integer/MAX_VALUE)
+(defn- encode-pkt
+  "Infinite lazy stream of encoded packets"
+  [data k]
+  (let [deg-seed  (rand-int Integer/MAX_VALUE)
         pkts-seed (rand-int Integer/MAX_VALUE)
         deg       (lazy-rand/rint deg-seed k)
         indices   (uniform-k-sample (range 0 k) deg pkts-seed)
         pkts      (pkts-subset data indices)]
     (with-meta (combine-pkts pkts) {:k k :deg-seed deg-seed
                                     :pkts-seed pkts-seed})))
+
+;; filename -> packet size -> packets
+(defn encode
+  "Generates enough packets to reconstruct the original file"
+  [fname l]
+  ; TODO: Replace this with logging
+  (println "BUILDING DATA")
+  (let [specs     (specify-fntn fname l)
+        data      (first specs)
+        k         (second specs)]
+    (println "DATA BUILT")
+    (repeatedly #(encode-pkt data k))))
