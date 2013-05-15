@@ -19,13 +19,25 @@
         deg (pkt-deg pkt)]
     (uniform-k-sample (range 0 k) deg pkts-seed)))
 
+(defn src-pkt-decoded?
+  "Take index of source packet and checks to see if it's decoded"
+  [pkt-idx decd]
+  (contains? decd pkt-idx))
+
+(defn src-pkt-dependencies
+  "Returns the list of encoded packets used the packet at `pkt-idx` in the
+  encoding step, or nil if there are none"
+  [pkt-idx deps]
+  (get deps pkt-idx))
+
 (defn decode
   "Takes a stream of packets and the packet size, returns a decoded file"
   [pkt-strm]
   ; TODO: replace this with logging
   (println "ENCODING DATA")
-  (let [init-pkts (take 3000 pkt-strm)
-        q         (PriorityQueue.)
-        decd      #{}]
+  (let [{:keys [k]} (meta pkt-strm)
+        init-pkts   (take 3000 pkt-strm)
+        q           (PriorityQueue.)
+        decd        {}]
     (println "DECODING DATA")
-    (println (pkt-indices (first init-pkts)))))
+    (println k)))
