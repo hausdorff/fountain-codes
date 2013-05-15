@@ -50,7 +50,7 @@
   (let [{:keys [k l]} (meta pkt-strm)
         decd          #{}  ; #{indices of decoded pkts}
         deps          {}   ; src pkt idx -> #{encoded pkt dependencies}
-        blnk-msg      (repeat k (repeat l \space))
+        blnk-msg      (repeat k (repeat l \space))]  ; blank message
     (println "DECODING DATA")
     (println k)
     (decode-loop pkt-strm k decd deps blnk-msg)))
