@@ -24,7 +24,6 @@
         n'               (inc n)
         index            (lazy-rand/nint r n')]
     (with-meta (cond (<= n' size)   (conj sampler v)
-                     ;(= n' size)   (shuffle (conj sampler v))
                      (< index size) (assoc sampler index v)
                      :else          sampler)
       {:size size :n n'})))
