@@ -30,7 +30,7 @@
   (map (fn [x] (.get data x)) indices))
 
 (defn- encode-pkt
-  "Infinite lazy stream of encoded packets"
+  "Creates one encoded packet"
   [data k]
   (let [deg-seed  (rand-int Integer/MAX_VALUE)
         pkts-seed (rand-int Integer/MAX_VALUE)
@@ -42,12 +42,13 @@
 
 ;; filename -> packet size -> packets
 (defn encode
-  "Generates enough packets to reconstruct the original file"
+  "Generates infinite lazy stream of packets"
   [fname l]
   ; TODO: Replace this with logging
   (println "BUILDING DATA")
   (let [specs     (specify-fntn fname l)
         data      (first specs)
         k         (second specs)]
-    (println "DATA BUILT")
+    (println (str "    Data size: " (* k l) " bytes"))
+    (println (str "    # of pkts: " k))
     (repeatedly #(encode-pkt data k))))
