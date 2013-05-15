@@ -1,4 +1,4 @@
-# A simple implementation of LT fountain codes with visualization
+# A simple implementation of LT fountain codes
 
 
 
