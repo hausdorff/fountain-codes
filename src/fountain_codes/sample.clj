@@ -19,18 +19,18 @@
 
 (defn- rs-insert
   "Inserts value into reservoir sampler (created using `rs-create`)."
-  [sampler v]
+  [sampler v r]
   (let [{:keys [size n]} (meta sampler)
-        n' (inc n)
-        index (lazy-rand/enc-pkts n')]
-    (with-meta (cond (<= n' size)    (conj sampler v)
-                     ;(= n' size)    (shuffle (conj sampler v))
+        n'               (inc n)
+        index            (lazy-rand/nint r n')]
+    (with-meta (cond (<= n' size)   (conj sampler v)
+                     ;(= n' size)   (shuffle (conj sampler v))
                      (< index size) (assoc sampler index v)
                      :else          sampler)
-      {:size size
-       :n n'})))
+      {:size size :n n'})))
 
 (defn uniform-k-sample
   "Takes a uniformly-likely k-sample of some n-element list in O(n) time/space"
-  [arr k]
-  (reduce rs-insert (rs-create k) arr))
+  [arr k seed]
+  (let [r (lazy-rand/newrand seed)]
+    (reduce (fn [sampler v] (rs-insert sampler v r)) (rs-create k) arr)))
