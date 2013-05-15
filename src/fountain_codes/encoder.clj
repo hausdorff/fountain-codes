@@ -42,7 +42,8 @@
 
 ;; filename -> packet size -> packets
 (defn encode
-  "Generates infinite lazy stream of packets"
+  "Generates infinite lazy stream of packets; metadata includes total # of src
+  pkts encoded by stream"
   [fname l]
   ; TODO: Replace this with logging
   (println "BUILDING DATA")
@@ -51,4 +52,5 @@
         k         (second specs)]
     (println (str "    Data size: " (* k l) " bytes"))
     (println (str "    # of pkts: " k))
-    (repeatedly #(encode-pkt data k))))
+    (with-meta (repeatedly #(encode-pkt data k))
+      {:k k})))
