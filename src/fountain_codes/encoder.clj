@@ -42,12 +42,3 @@
         pkts      (pkts-subset data indices)]
     (with-meta (combine-pkts pkts) {:k k :deg-seed deg-seed
                                     :pkts-seed pkts-seed})))
-
-;; TODO:
-;; Our goal is change `encode` to be completely lazy sequence. This involves:
-;;
-;; (1) remove random number generators lazy-rand.clj
-;; (2) remove nextInt wrappers in lazy-rand.clj
-;; (3) change choose-degree to be a lazy sequence of random ints [1..k]
-;; (4) change insert in sample to be a lazy sequence of random ints
-;; (5) finally, change `encode` to be a lazy sequence
